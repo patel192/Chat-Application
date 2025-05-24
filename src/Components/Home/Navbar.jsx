@@ -1,27 +1,39 @@
-import React from 'react'
+import React from "react";
 
 export const Navbar = () => {
   return (
-     <nav className="bg-gray-800 p-4 shadow-md">
+    <nav className="bg-gray-800 p-4 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
-        {/* Logo */}
         <div className="text-2xl font-bold text-blue-400">
-          <a href="/" className="hover:text-blue-300 transition duration-300">ChatApp</a>
+          <a href="/" className="hover:text-blue-300 transition duration-300">
+            ChatApp
+          </a>
         </div>
 
-        {/* Navigation Links (Always visible) */}
         <ul className="flex space-x-6 items-center">
           <li>
-            <a href="/features" className="text-gray-300 hover:text-white transition duration-300 text-lg">Features</a>
+            <a
+              href="/features"
+              className="text-gray-300 hover:text-white transition duration-300 text-lg"
+            >
+              Features
+            </a>
           </li>
           <li>
-            <a href="/pricing" className="text-gray-300 hover:text-white transition duration-300 text-lg">Pricing</a>
+            <a
+              href="/about"
+              className="text-gray-300 hover:text-white transition duration-300 text-lg"
+            >
+             Home
+            </a>
           </li>
           <li>
-            <a href="/about" className="text-gray-300 hover:text-white transition duration-300 text-lg">About Us</a>
-          </li>
-          <li>
-            <a href="/contact" className="text-gray-300 hover:text-white transition duration-300 text-lg">Contact</a>
+            <a
+              href="/contact"
+              className="text-gray-300 hover:text-white transition duration-300 text-lg"
+            >
+              Contact
+            </a>
           </li>
           <li>
             <button className="bg-transparent text-white border border-white px-4 py-2 rounded-md hover:bg-white hover:text-gray-800 transition duration-300 text-lg">
@@ -36,5 +48,5 @@ export const Navbar = () => {
         </ul>
       </div>
     </nav>
-  )
-}
+  );
+};
