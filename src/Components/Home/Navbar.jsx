@@ -29,6 +29,14 @@ export const Navbar = () => {
           </li>
           <li>
             <a
+              href="/dashboard"
+              className="text-gray-300 hover:text-white transition duration-300 text-lg"
+            >
+              Dashboard
+            </a>
+          </li>
+          <li>
+            <a
               href="/contact"
               className="text-gray-300 hover:text-white transition duration-300 text-lg"
             >
