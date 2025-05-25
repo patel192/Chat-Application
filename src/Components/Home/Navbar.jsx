@@ -21,10 +21,10 @@ export const Navbar = () => {
           </li>
           <li>
             <a
-              href="/about"
+              href="/home"
               className="text-gray-300 hover:text-white transition duration-300 text-lg"
             >
-             Home
+              Home
             </a>
           </li>
           <li>
@@ -37,12 +37,12 @@ export const Navbar = () => {
           </li>
           <li>
             <button className="bg-transparent text-white border border-white px-4 py-2 rounded-md hover:bg-white hover:text-gray-800 transition duration-300 text-lg">
-              Login
+              <a href="/login">Login</a>
             </button>
           </li>
           <li>
             <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 font-semibold text-lg">
-              Sign Up
+              <a href="/signup">Sign Up</a>
             </button>
           </li>
         </ul>
