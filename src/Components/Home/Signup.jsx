@@ -1,36 +1,21 @@
 import React from 'react'
-import { useState } from 'react';
+import axios from 'axios';
+import { useForm } from 'react-hook-form';
 export const Signup = () => {
-    const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Basic validation
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
+  const {register,handleSubmit}=useForm();
+  const SubmitHandler = async (data) => {
+    try{
+      const res = await axios.post("/user",data)
+     if(res.status === 201){
+      alert("User Created Succefully")
+       console.log(res)
+     }else{
+      alert("User Not Created")
+     }
+    }catch(err){
+     alert("Signup Failed")
     }
-    // In a real application, you would send this data to your backend API
-    // for user registration (e.g., using fetch or Axios).
-    console.log('Sign Up Data:', formData);
-    alert('Account created successfully! (This is a mock registration)');
-    // You might want to redirect the user to a login page or dashboard here
-    // e.g., navigate('/login') using useNavigate from react-router-dom
-  };
-
+  }
   return (
    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -39,7 +24,6 @@ export const Signup = () => {
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600 max-w">
           Or {' '}
-          {/* If using React Router DOM, replace <a> with <Link to="/login"> */}
           <a href="/login" className="font-medium text-blue-600 hover:text-blue-500">
             log in to your existing account
           </a>
@@ -48,7 +32,7 @@ export const Signup = () => {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={handleSubmit(SubmitHandler)}>
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-700">
                 Username
@@ -60,10 +44,9 @@ export const Signup = () => {
                   type="text"
                   autoComplete="username"
                   required
-                  value={formData.username}
-                  onChange={handleChange}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="Choose a unique username"
+                  {...register("username")}
                 />
               </div>
             </div>
@@ -79,10 +62,9 @@ export const Signup = () => {
                   type="email"
                   autoComplete="email"
                   required
-                  value={formData.email}
-                  onChange={handleChange}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="your@example.com"
+                  {...register("email")}
                 />
               </div>
             </div>
@@ -98,10 +80,9 @@ export const Signup = () => {
                   type="password"
                   autoComplete="new-password"
                   required
-                  value={formData.password}
-                  onChange={handleChange}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="Minimum 6 characters"
+                  {...register("password")}
                 />
               </div>
             </div>
@@ -117,8 +98,6 @@ export const Signup = () => {
                   type="password"
                   autoComplete="new-password"
                   required
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="Repeat your password"
                 />

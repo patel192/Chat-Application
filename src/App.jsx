@@ -8,7 +8,9 @@ import { Login } from "./Components/Home/Login";
 import { Signup } from "./Components/Home/Signup";
 import { ChatDashboard } from "./Components/ChatBox.jsx/ChatDashboard";
 import { Profile } from "./Components/ChatBox.jsx/Profile";
+import axios from "axios";
 function App() {
+  axios.defaults.baseURL = "http://localhost:3003/api";
   return (
     <>
       <Navbar />
