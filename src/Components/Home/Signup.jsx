@@ -1,30 +1,38 @@
-import React from 'react'
-import axios from 'axios';
-import { useForm } from 'react-hook-form';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useForm } from "react-hook-form";
 export const Signup = () => {
-  const {register,handleSubmit}=useForm();
+  const { register, handleSubmit } = useForm();
+  const navigate = useNavigate();
   const SubmitHandler = async (data) => {
-    try{
-      const res = await axios.post("/user",data)
-     if(res.status === 201){
-      alert("User Created Succefully")
-       console.log(res)
-     }else{
-      alert("User Not Created")
-     }
-    }catch(err){
-     alert("Signup Failed")
+    try {
+      const res = await axios.post("/user", data);
+      if (res.status === 201) {
+        alert("User Created Succefully");
+        console.log(res);
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      } else {
+        alert("User Not Created");
+      }
+    } catch (err) {
+      alert("Signup Failed");
     }
-  }
+  };
   return (
-   <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Create your ChatApp account
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600 max-w">
-          Or {' '}
-          <a href="/login" className="font-medium text-blue-600 hover:text-blue-500">
+          Or{" "}
+          <a
+            href="/login"
+            className="font-medium text-blue-600 hover:text-blue-500"
+          >
             log in to your existing account
           </a>
         </p>
@@ -34,7 +42,10 @@ export const Signup = () => {
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit(SubmitHandler)}>
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Username
               </label>
               <div className="mt-1">
@@ -52,7 +63,10 @@ export const Signup = () => {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email address
               </label>
               <div className="mt-1">
@@ -70,7 +84,10 @@ export const Signup = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="mt-1">
@@ -88,7 +105,10 @@ export const Signup = () => {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Confirm Password
               </label>
               <div className="mt-1">
@@ -116,5 +136,5 @@ export const Signup = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
