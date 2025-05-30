@@ -2,9 +2,15 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import { ToastContainer,toast } from "react-toastify";
 export const Signup = () => {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
+  const notify = () =>{
+    toast.success("User Created Successfully!",{
+      position:"top-center"
+    })
+  }
   const SubmitHandler = async (data) => {
     try {
       const res = await axios.post("/user", data);
@@ -14,6 +20,7 @@ export const Signup = () => {
         setTimeout(() => {
           navigate("/login");
         }, 2000);
+        <ToastContainer/>
       } else {
         alert("User Not Created");
       }
