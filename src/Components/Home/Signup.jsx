@@ -9,12 +9,11 @@ export const Signup = () => {
 
   const SubmitHandler = async (data) => {
     try {
-      const res = await axios.post("/user", data);
+      const res = await axios.post("/user",data)
       if (res.status === 201) {
         toast.success("User Created Successfully!", {
           position: "top-center",
         });
-
         console.log(res);
         setTimeout(() => {
           navigate("/login");
@@ -43,7 +42,6 @@ export const Signup = () => {
           </a>
         </p>
       </div>
-
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit(SubmitHandler)}>
