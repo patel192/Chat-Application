@@ -1,8 +1,10 @@
+import axios from "axios";
 import { useForm } from "react-hook-form";
 
 export const Login = () => {
   const { register, handleSubmit } = useForm();
   const SubmitHandler = async (data) => {
+    const res = await axios.post("/user",data)
     console.log(data);
     alert("data submited successfully");
   };
