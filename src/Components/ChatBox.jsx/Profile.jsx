@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
+import { EditableProfile } from './EditableProfile';
 export const Profile = () => {
     const [isEditing, setIsEditing] = useState(false);
 
