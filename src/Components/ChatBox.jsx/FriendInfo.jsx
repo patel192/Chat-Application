@@ -1,7 +1,7 @@
-import React from 'react'
+import React from "react";
 import { useState, useRef, useEffect } from "react";
 export const FriendInfo = ({ user, onClose }) => {
-    if (!user) return null;
+     if (!user) return null; // Don't render if no user is selected
   return (
    <div className="w-72 bg-white border-l border-gray-200 flex flex-col">
       {/* Header */}

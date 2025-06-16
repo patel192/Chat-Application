@@ -9,6 +9,8 @@ import { Signup } from "./Components/Home/Signup";
 import { ChatDashboard } from "./Components/ChatBox.jsx/ChatDashboard";
 import { Profile } from "./Components/ChatBox.jsx/Profile";
 import axios from "axios";
+import { EditableProfile } from "./Components/ChatBox.jsx/EditableProfile";
+import { FriendInfo } from "./Components/ChatBox.jsx/FriendInfo";
 function App() {
   axios.defaults.baseURL = "http://localhost:3003/api";
   return (
@@ -22,7 +24,8 @@ function App() {
         <Route path="/features" element={<Features />}></Route>
         <Route path="/dashboard" element={<ChatDashboard />}></Route>
         <Route path="/profile" element={<Profile />}></Route>
-        <Route path="/editprofile" element={<Profile />}></Route>
+        <Route path="/editprofile" element={<EditableProfile />}></Route>
+        <Route path="/info" element={<FriendInfo />}></Route>
       </Routes>
     </>
   );
