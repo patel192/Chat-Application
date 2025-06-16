@@ -22,6 +22,7 @@ function App() {
         <Route path="/features" element={<Features />}></Route>
         <Route path="/dashboard" element={<ChatDashboard />}></Route>
         <Route path="/profile" element={<Profile />}></Route>
+        <Route path="/editprofile" element={<Profile />}></Route>
       </Routes>
     </>
   );

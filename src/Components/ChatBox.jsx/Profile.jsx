@@ -1,18 +1,60 @@
 import React from 'react'
-
+import { useState } from 'react';
 export const Profile = () => {
-    const mockUserProfile = {
-  id: 'user123',
-  username: 'chatapp_user',
-  fullName: 'John Doe',
-  email: 'john.doe@example.com',
-  bio: 'Passionate about connecting with people and exploring new ideas. Always open to a good chat!',
-  avatar: 'https://i.pravatar.cc/150?img=5', // A larger avatar for the profile
-  joinDate: 'January 15, 2023',
-  location: 'New York, USA',
-  status: 'Online',
-};
+    const [isEditing, setIsEditing] = useState(false);
 
+  // Initial mock user profile data
+  const [userProfile, setUserProfile] = useState({
+    id: 'user123',
+    username: 'chatapp_user',
+    fullName: 'John Doe',
+    email: 'john.doe@example.com',
+    bio: 'Passionate about connecting with people and exploring new ideas. Always open to a good chat!',
+    avatar: 'https://i.pravatar.cc/150?img=5',
+    joinDate: 'January 15, 2023',
+    location: 'New York, USA',
+    status: 'Online',
+  });
+
+  // Function to toggle edit mode
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  // Function to cancel edit mode and revert to view mode
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+  };
+
+  // Function to save edited data (placeholder)
+  const handleSaveEdit = (updatedData) => {
+    setUserProfile(updatedData); // Update the main profile state
+    setIsEditing(false); // Exit edit mode
+    console.log('Profile saved:', updatedData);
+    // In a real application, you would send this updatedData to a backend API
+  };
+
+  if (isEditing) {
+    return (
+      <EditableProfile 
+        userProfile={userProfile} 
+        onCancelEdit={handleCancelEdit} 
+        onSaveEdit={handleSaveEdit}
+      />
+    );
+  }
+
+ if (isEditing) {
+    return (
+      <EditableProfile 
+        userProfile={userProfile} 
+        onCancelEdit={handleCancelEdit} 
+        onSaveEdit={handleSaveEdit}
+      />
+    );
+  }
+
+  // Default view: Profile details
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl w-full bg-white shadow-xl rounded-lg overflow-hidden md:flex">
@@ -21,18 +63,14 @@ export const Profile = () => {
           <div className="relative mb-6">
             <img
               className="h-32 w-32 rounded-full object-cover border-4 border-white shadow-lg"
-              src={mockUserProfile.avatar}
+              src={userProfile.avatar}
               alt="User Avatar"
             />
-            {/* Optional: Add an overlay for changing profile pic */}
-            {/* <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
-              <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.218A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.218A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-            </div> */}
           </div>
-          <h2 className="text-3xl font-bold mb-2">{mockUserProfile.fullName}</h2>
-          <p className="text-blue-100 text-lg mb-4">@{mockUserProfile.username}</p>
-          <span className={`px-3 py-1 rounded-full text-sm font-semibold ${mockUserProfile.status === 'Online' ? 'bg-green-500' : 'bg-gray-500'} text-white`}>
-            {mockUserProfile.status}
+          <h2 className="text-3xl font-bold mb-2">{userProfile.fullName}</h2>
+          <p className="text-blue-100 text-lg mb-4">@{userProfile.username}</p>
+          <span className={`px-3 py-1 rounded-full text-sm font-semibold ${userProfile.status === 'Online' ? 'bg-green-500' : 'bg-gray-500'} text-white`}>
+            {userProfile.status}
           </span>
         </div>
 
@@ -45,26 +83,25 @@ export const Profile = () => {
           <div className="space-y-4">
             <div>
               <p className="text-sm font-semibold text-gray-600">Email Address</p>
-              <p className="text-lg text-gray-800">{mockUserProfile.email}</p>
+              <p className="text-lg text-gray-800">{userProfile.email}</p>
             </div>
             <div>
               <p className="text-sm font-semibold text-gray-600">Bio</p>
-              <p className="text-lg text-gray-800 leading-relaxed">{mockUserProfile.bio}</p>
+              <p className="text-lg text-gray-800 leading-relaxed">{userProfile.bio}</p>
             </div>
             <div>
               <p className="text-sm font-semibold text-gray-600">Location</p>
-              <p className="text-lg text-gray-800">{mockUserProfile.location}</p>
+              <p className="text-lg text-gray-800">{userProfile.location}</p>
             </div>
             <div>
               <p className="text-sm font-semibold text-gray-600">Joined ChatApp</p>
-              <p className="text-lg text-gray-800">{mockUserProfile.joinDate}</p>
+              <p className="text-lg text-gray-800">{userProfile.joinDate}</p>
             </div>
           </div>
 
           <div className="mt-8">
-            {/* If you want an edit button */}
             <button
-              // onClick={() => alert('Edit profile functionality goes here!')}
+              onClick={handleEditClick} // Attach the onClick handler here
               className="w-full md:w-auto px-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               Edit Profile
@@ -73,5 +110,5 @@ export const Profile = () => {
         </div>
       </div>
     </div>
-  )
+  );
 }
