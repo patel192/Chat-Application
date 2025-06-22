@@ -12,6 +12,7 @@ import axios from "axios";
 import { EditableProfile } from "./Components/ChatBox.jsx/EditableProfile";
 import { FriendInfo } from "./Components/ChatBox.jsx/FriendInfo";
 import Settings from "./Components/ChatBox.jsx/Settings";
+import FriendRequests from "./Components/ChatBox.jsx/FriendRequests";
 
 function App() {
   axios.defaults.baseURL = "http://localhost:3003/api";
@@ -20,7 +21,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />}></Route>
-        <Route path="/settings" element={<Settings />}></Route>
+        <Route path="/requests" element={<FriendRequests />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/signup" element={<Signup />}></Route>
         <Route path="/contact" element={<ConntactUs />}></Route>

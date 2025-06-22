@@ -29,10 +29,10 @@ export const Navbar = () => {
           </li>
           <li>
             <a
-              href="/settings"
+              href="/requests"
               className="text-gray-300 hover:text-white transition duration-300 text-lg"
             >
-              Settings
+              Requests
             </a>
           </li>
           <li>
