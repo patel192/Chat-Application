@@ -18,13 +18,11 @@ function App() {
   return (
     <>
       <Navbar />
-      
       <Routes>
-        
         <Route path="/" element={<Home />}></Route>
         <Route path="/settings" element={<Settings />}></Route>
-        <Route path="/login" element={<Login/>}></Route>
-        <Route path="/signup" element={<Signup/>}></Route>
+        <Route path="/login" element={<Login />}></Route>
+        <Route path="/signup" element={<Signup />}></Route>
         <Route path="/contact" element={<ConntactUs />}></Route>
         <Route path="/features" element={<Features />}></Route>
         <Route path="/dashboard" element={<ChatDashboard />}></Route>
