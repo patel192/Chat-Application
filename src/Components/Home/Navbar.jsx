@@ -29,10 +29,10 @@ export const Navbar = () => {
           </li>
           <li>
             <a
-              href="/management"
+              href="/archived"
               className="text-gray-300 hover:text-white transition duration-300 text-lg"
             >
-              Group
+              ArchivedChats
             </a>
           </li>
           <li>
