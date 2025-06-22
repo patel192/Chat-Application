@@ -15,6 +15,7 @@ import Settings from "./Components/ChatBox.jsx/Settings";
 import FriendRequests from "./Components/ChatBox.jsx/FriendRequests";
 import GroupManagement from "./Components/ChatBox.jsx/GroupManagement";
 import ArchivedChats from "./Components/ChatBox.jsx/ArchivedChats";
+import SearchMessages from "./Components/ChatBox.jsx/SearchMessages";
 
 function App() {
   axios.defaults.baseURL = "http://localhost:3003/api";
@@ -23,7 +24,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />}></Route>
-        <Route path="/archived" element={<ArchivedChats />}></Route>
+        <Route path="/search-messages" element={<SearchMessages />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/signup" element={<Signup />}></Route>
         <Route path="/contact" element={<ConntactUs />}></Route>
