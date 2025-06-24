@@ -29,10 +29,10 @@ export const Navbar = () => {
           </li>
           <li>
             <a
-              href="/status"
+              href="/notification"
               className="text-gray-300 hover:text-white transition duration-300 text-lg"
             >
-              status
+              Notifications
             </a>
           </li>
           <li>
