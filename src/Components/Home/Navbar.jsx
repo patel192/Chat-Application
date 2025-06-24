@@ -29,10 +29,10 @@ export const Navbar = () => {
           </li>
           <li>
             <a
-              href="/history"
+              href="/status"
               className="text-gray-300 hover:text-white transition duration-300 text-lg"
             >
-              Chat-History
+              status
             </a>
           </li>
           <li>
