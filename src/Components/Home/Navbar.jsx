@@ -29,10 +29,10 @@ export const Navbar = () => {
           </li>
           <li>
             <a
-              href="/notification"
+              href="/blockedusers"
               className="text-gray-300 hover:text-white transition duration-300 text-lg"
             >
-              Notifications
+              Blocked-Users
             </a>
           </li>
           <li>

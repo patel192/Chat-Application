@@ -19,6 +19,7 @@ import SearchMessages from "./Components/ChatBox.jsx/SearchMessages";
 import ChatHistoryManager from "./Components/ChatBox.jsx/ChatHistoryManager";
 import UserStatusUpdater from "./Components/ChatBox.jsx/UserStatusUpdater";
 import NotificationCenter from "./Components/ChatBox.jsx/NotificationCenter";
+import BlockedUsers from "./Components/ChatBox.jsx/BlockedUsers";
 
 function App() {
   axios.defaults.baseURL = "http://localhost:3003/api";
@@ -36,7 +37,7 @@ function App() {
         <Route path="/profile" element={<Profile />}></Route>
         <Route path="/editprofile" element={<EditableProfile />}></Route>
         <Route path="/info" element={<FriendInfo />}></Route>
-        <Route path="/notification" element={<NotificationCenter />}></Route>
+        <Route path="/blockedusers" element={<BlockedUsers />}></Route>
       </Routes>
     </>
   );
