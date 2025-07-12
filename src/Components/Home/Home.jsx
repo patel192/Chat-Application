@@ -1,46 +1,62 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 export const Home = () => {
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto text-center">
-        <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#0B1D51] via-[#1f3b73] to-[#3e63d3] text-white flex items-center justify-center px-6 py-12">
+      <div className="max-w-4xl text-center">
+        {/* App Name */}
+        <motion.h1
+          className="text-4xl md:text-6xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600"
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
           Connect Instantly. Chat Freely.
-        </h1>
-        <p className="text-xl md:text-2xl mb-10 leading-relaxed">
-          Welcome to **ChatApp**, where conversations come alive. Experience
-          seamless real-time messaging, secure group chats, and rich media
-          sharing with friends, family, and colleagues around the globe.
-        </p>
-        <p className="text-lg md:text-xl mb-12">
-          Join a community built for effortless communication.
+        </motion.h1>
+
+        {/* Description */}
+        <motion.p
+          className="text-lg md:text-xl mb-6 text-blue-100"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          Welcome to <span className="text-purple-300 font-semibold">ChatApp</span>,
+          where conversations come alive. Enjoy real-time messaging, group chats,
+          and multimedia sharing — fast, secure, and elegant.
+        </motion.p>
+
+        <p className="text-md md:text-lg mb-12 text-blue-200">
+          Join our growing global community for effortless communication.
         </p>
 
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
-          {/* Login Button */}
-          {/* If using React Router DOM, replace <a> with <Link to="/login"> */}
-          <a
-            href="/login" // Replace with your actual login route
-            className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md shadow-lg text-blue-600 bg-white hover:bg-gray-100 transition duration-300 ease-in-out transform hover:-translate-y-1"
+        {/* Buttons */}
+        <motion.div
+          className="flex flex-col sm:flex-row gap-4 justify-center"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          <Link
+            to="/login"
+            className="px-8 py-3 text-base font-semibold bg-white text-blue-700 rounded-md shadow-md hover:bg-gray-100 transition duration-300 hover:-translate-y-1"
           >
             Log In
-          </a>
-
-          {/* Sign Up Button */}
-          {/* If using React Router DOM, replace <a> with <Link to="/signup"> */}
-          <a
-            href="/signup" // Replace with your actual signup route
-            className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md shadow-lg text-white bg-blue-700 hover:bg-blue-800 transition duration-300 ease-in-out transform hover:-translate-y-1"
+          </Link>
+          <Link
+            to="/signup"
+            className="px-8 py-3 text-base font-semibold bg-purple-600 text-white rounded-md shadow-md hover:bg-purple-700 transition duration-300 hover:-translate-y-1"
           >
             Sign Up
-          </a>
-        </div>
+          </Link>
+        </motion.div>
 
-        <p className="text-md mt-16 opacity-80">
-          Already have an account? Log in and start chatting! New here? Sign up
-          in seconds!
+        <p className="mt-16 text-sm text-gray-300">
+          Already have an account? Log in and start chatting. New here? Sign up in seconds!
         </p>
       </div>
     </div>
   );
 };
+s
