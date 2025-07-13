@@ -1,8 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import {Navbar} from "./Navbar"
 export const Home = () => {
   return (
+    <>
+    <Navbar/>
     <div className="min-h-screen bg-gradient-to-br from-[#0B1D51] via-[#1f3b73] to-[#3e63d3] text-white flex items-center justify-center px-6 py-12">
       <div className="max-w-4xl text-center">
         {/* App Name */}
@@ -57,5 +60,6 @@ export const Home = () => {
         </p>
       </div>
     </div>
+    </>
   );
 };
