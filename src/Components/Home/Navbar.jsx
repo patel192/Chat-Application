@@ -14,7 +14,7 @@ export const Navbar = () => {
           <li>
             <a
               href="/features"
-              className="text-gray-300 hover:text-white transition duration-300 text-lg"
+              className="text-gray-300 hover:text-blue-700 transition duration-300 text-lg"
             >
               Features
             </a>
@@ -22,7 +22,7 @@ export const Navbar = () => {
           <li>
             <a
               href="/"
-              className="text-gray-300 hover:text-white transition duration-300 text-lg"
+              className="text-gray-300 hover:text-blue-700 transition duration-300 text-lg"
             >
               Home
             </a>
@@ -30,7 +30,7 @@ export const Navbar = () => {
           <li>
             <a
               href="/blockedusers"
-              className="text-gray-300 hover:text-white transition duration-300 text-lg"
+              className="text-gray-300 hover:text-blue-700 transition duration-300 text-lg"
             >
               Blocked-Users
             </a>
@@ -38,7 +38,7 @@ export const Navbar = () => {
           <li>
             <a
               href="/dashboard"
-              className="text-gray-300 hover:text-white transition duration-300 text-lg"
+              className="text-gray-300 hover:text-blue-700 transition duration-300 text-lg"
             >
               Dashboard
             </a>
@@ -46,7 +46,7 @@ export const Navbar = () => {
           <li>
             <a
               href="/contact"
-              className="text-gray-300 hover:text-white transition duration-300 text-lg"
+              className="text-gray-300 hover:text-blue-700 transition duration-300 text-lg"
             >
               Contact
             </a>
@@ -57,7 +57,7 @@ export const Navbar = () => {
             </button>
           </li>
           <li>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 font-semibold text-lg">
+            <button className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300 font-semibold text-lg">
               <a href="/signup">Sign Up</a>
             </button>
           </li>

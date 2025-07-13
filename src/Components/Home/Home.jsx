@@ -46,7 +46,7 @@ export const Home = () => {
           </Link>
           <Link
             to="/signup"
-            className="px-8 py-3 text-base font-semibold bg-purple-600 text-white rounded-md shadow-md hover:bg-purple-700 transition duration-300 hover:-translate-y-1"
+            className="px-8 py-3 text-base font-semibold bg-purple-600 text-white rounded-md shadow-md hover:bg-blue-700 transition duration-300 hover:-translate-y-1"
           >
             Sign Up
           </Link>
@@ -59,4 +59,3 @@ export const Home = () => {
     </div>
   );
 };
-s
