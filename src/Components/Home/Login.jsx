@@ -11,7 +11,7 @@ export const Login = () => {
 
   const SubmitHandler = async (data) => {
     try {
-      const res = await axios.post("/login", data);
+      const res = await axios.post("http://localhost:3003/user/login", data);
       if (res.status === 200) {
         const user = res.data.data;
 
