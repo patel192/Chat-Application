@@ -1,111 +1,102 @@
+import React from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const Login = () => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
+  const navigate = useNavigate();
+
   const SubmitHandler = async (data) => {
-    const res = await axios.post("/user",data)
-    console.log(data);
-    alert("data submited successfully");
+    try {
+      const res = await axios.post("/login", data);
+      if (res.status === 200) {
+        const user = res.data.data;
+
+        // Store user data in localStorage
+        localStorage.setItem("userId", user._id);
+        localStorage.setItem("userName", user.username);
+        localStorage.setItem("userPic", user.profilePic);
+
+        toast.success("Login successful!", { position: "top-center" });
+
+        reset();
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1500);
+      } else {
+        toast.error("Invalid credentials");
+      }
+    } catch (err) {
+      toast.error("Login failed. Please try again.");
+    }
   };
+
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Sign in to your ChatApp account
+    <div className="min-h-screen bg-gradient-to-br from-[#0B1D51] via-[#1f3b73] to-[#3e63d3] flex flex-col justify-center items-center px-4 py-12">
+      <ToastContainer />
+      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-2xl">
+        <h2 className="text-3xl font-extrabold text-center text-blue-700 mb-2">
+          Login
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600 max-w">
-          Or{" "}
-          <a
-            href="/signup"
-            className="font-medium text-blue-600 hover:text-blue-500"
+
+        <form onSubmit={handleSubmit(SubmitHandler)} className="space-y-5">
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email Address
+            </label>
+            <input
+              type="email"
+              placeholder="you@example.com"
+              {...register("email", { required: true })}
+              className="w-full px-4 py-3 text-gray-800 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              placeholder="Enter your password"
+              {...register("password", { required: true })}
+              className="w-full px-4 py-3 text-gray-800 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            />
+          </div>
+
+          {/* Remember me */}
+          <div className="flex items-center justify-between text-sm text-gray-600">
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                className="form-checkbox text-blue-600 h-4 w-4 rounded"
+              />
+              <span>Remember me</span>
+            </label>
+            <a href="#" className="text-blue-600 hover:underline">
+              Forgot password?
+            </a>
+          </div>
+
+          {/* Submit */}
+          <button
+            type="submit"
+            className="w-full py-3 cursor-pointer bg-purple-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition duration-700"
           >
-            create a new account
+            Sign In
+          </button>
+        </form>
+        <p className="text-center text-sm text-gray-500 mb-6">
+          New here?{" "}
+          <a href="/signup" className="text-blue-600 hover:underline">
+            Create an account
           </a>
         </p>
-      </div>
-
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit(SubmitHandler)}>
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email address
-              </label>
-              <div className="mt-1">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="you@example.com"
-                  {...register("email")}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
-              </label>
-              <div className="mt-1">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="Your password"
-                  {...register("password")}
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label
-                  htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-900"
-                >
-                  Remember me
-                </label>
-              </div>
-
-              <div className="text-sm">
-                <a
-                  href="#"
-                  className="font-medium text-blue-600 hover:text-blue-500"
-                >
-                  Forgot your password?
-                </a>
-              </div>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300"
-              >
-                Sign In
-              </button>
-            </div>
-          </form>
-        </div>
       </div>
     </div>
   );
