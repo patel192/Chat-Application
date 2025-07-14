@@ -6,6 +6,7 @@ import {
   FaUserFriends,
   FaCog,
   FaSignOutAlt,
+  FaUsers 
 } from "react-icons/fa";
 export const UserSidebar = () => {
     const navigate = useNavigate();
@@ -43,6 +44,18 @@ export const UserSidebar = () => {
           className="flex items-center gap-3 hover:bg-white/10 px-4 py-2 rounded transition"
         >
           <FaCog /> Settings
+        </button>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 hover:bg-white/10 px-4 py-2 rounded transition"
+        >
+          <FaUsers /> Group
+        </button>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 hover:bg-red-600 px-4 py-2 rounded transition mt-auto text-red-200"
+        >
+          <FaSignOutAlt /> Logout
         </button>
         <button
           onClick={handleLogout}

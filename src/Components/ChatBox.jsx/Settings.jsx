@@ -1,228 +1,171 @@
-import React, { useState } from 'react';
+import React from 'react'
+import axios from "axios";
+import { useState,useEffect } from 'react';
+import { useForm } from "react-hook-form";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+export const Settings = () => {
+  const userId = localStorage.getItem("userId");
+  const { register, handleSubmit, setValue } = useForm();
+  const [user, setUser] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+  const [preview, setPreview] = useState("");
 
-function Settings() {
-  // Mock Settings Data
-  const [appSettings, setAppSettings] = useState({
-    notificationsEnabled: true,
-    playSoundOnNewMessage: true,
-    privacyMode: 'friends_only', // 'everyone', 'friends_only', 'private'
-    autoArchiveChats: false,
-    theme: 'system_default', // 'light', 'dark', 'system_default'
-    language: 'english',
-  });
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get(`/user/${userId}`);
+        const data = res.data.data;
+        setUser(data);
+        setPreview(data.profilePic);
+        setValue("username", data.username);
+        setValue("status", data.status);
+      } catch (err) {
+        toast.error("Error loading settings");
+      }
+    };
+    fetchUser();
+  }, [userId, setValue]);
 
-  const [saveStatus, setSaveStatus] = useState('');
+  const uploadToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "My_Images");
+    formData.append("cloud_name", "dfaou6haj");
 
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setAppSettings(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+    try {
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/dfaou6haj/image/upload",
+        formData
+      );
+      return res.data.secure_url;
+    } catch (err) {
+      toast.error("Image upload failed");
+      return null;
+    }
   };
 
-  const handleSaveSettings = (e) => {
-    e.preventDefault();
-    setSaveStatus('SAVING SETTINGS...');
-    // Simulate API call to save settings
-    setTimeout(() => {
-      console.log('Settings Saved:', appSettings);
-      setSaveStatus('SETTINGS UPDATED SUCCESSFULLY!');
-      setTimeout(() => setSaveStatus(''), 3000); // Clear message after 3 seconds
-    }, 1500);
+  const onSubmit = async (data) => {
+    try {
+      let imgURL = preview;
+
+      if (data.profilePic && data.profilePic[0]) {
+        const uploaded = await uploadToCloudinary(data.profilePic[0]);
+        if (uploaded) {
+          imgURL = uploaded;
+        }
+      }
+
+      const update = {
+        username: data.username,
+        status: data.status,
+        profilePic: imgURL,
+      };
+
+      const res = await axios.put(`/user/${userId}`, update);
+      if (res.status === 200) {
+        toast.success("Updated Successfully");
+        setUser(res.data.data);
+        localStorage.setItem("userName", res.data.data.username);
+        localStorage.setItem("userPic", res.data.data.profilePic);
+        setEditMode(false);
+      }
+    } catch (err) {
+      toast.error("Update failed");
+    }
   };
 
+  if (!user) return null;
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 font-inter text-gray-800">
-      <div className="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-2xl border border-gray-200">
-        {/* Header */}
-        <div className="bg-gray-800 text-white p-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold">APPLICATION SETTINGS</h2>
-          <button
-            onClick={handleSaveSettings}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-300 flex items-center text-sm"
-          >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7H5a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-3m-1-4l4 4m-4-4l-4 4m9-4l-4-4m4 4l-4-4M5 7h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V9a2 2 0 012-2z"></path></svg>
-            SAVE SETTINGS
-          </button>
-        </div>
+     <div className="min-h-screen bg-gradient-to-br from-[#0B1D51] via-[#1f3b73] to-[#3e63d3] flex flex-col items-center justify-center px-4 py-12">
+      <ToastContainer />
+      <div className="bg-white shadow-xl rounded-2xl w-full max-w-xl p-8">
+        <h2 className="text-3xl font-bold text-blue-700 mb-6 text-center">
+          Account Settings
+        </h2>
 
-        <div className="p-6">
-          <form onSubmit={handleSaveSettings} className="space-y-6">
-            {/* Notification Settings */}
-            <div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800 border-b pb-2 border-gray-200">NOTIFICATIONS</h3>
-              <div className="flex items-center justify-between py-2">
-                <label htmlFor="notificationsEnabled" className="text-gray-700 text-lg">Enable All Notifications</label>
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    id="notificationsEnabled"
-                    name="notificationsEnabled"
-                    checked={appSettings.notificationsEnabled}
-                    onChange={handleInputChange}
-                  />
-                  <span className="slider round"></span>
-                </label>
-              </div>
-              <div className="flex items-center justify-between py-2">
-                <label htmlFor="playSoundOnNewMessage" className="text-gray-700 text-lg">Play Sound on New Message</label>
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    id="playSoundOnNewMessage"
-                    name="playSoundOnNewMessage"
-                    checked={appSettings.playSoundOnNewMessage}
-                    onChange={handleInputChange}
-                  />
-                  <span className="slider round"></span>
-                </label>
-              </div>
+        {!editMode ? (
+          <>
+            <div className="flex flex-col items-center gap-4 mb-8">
+              <img
+                src={user.profilePic}
+                alt="profile"
+                className="w-24 h-24 rounded-full object-cover border-4 border-blue-600"
+              />
+              <h3 className="text-xl font-semibold">{user.username}</h3>
+              <p className="text-gray-500 text-sm">{user.email}</p>
+              <p className="text-gray-600 text-sm">💬 {user.status || "No status"}</p>
+              <button
+                onClick={() => setEditMode(true)}
+                className="mt-4 px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              >
+                Edit Profile
+              </button>
+            </div>
+          </>
+        ) : (
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            {/* Profile Pic Upload */}
+            <div className="flex items-center gap-4">
+              <img
+                src={preview}
+                alt="preview"
+                className="w-16 h-16 rounded-full object-cover border"
+              />
+              <input
+                type="file"
+                accept="image/*"
+                {...register("profilePic")}
+                onChange={(e) =>
+                  setPreview(URL.createObjectURL(e.target.files[0]))
+                }
+                className="text-sm text-gray-500"
+              />
             </div>
 
-            {/* Privacy Settings */}
+            {/* Username */}
             <div>
-              <h3 className="text-xl font-semibold mb-3 pt-4 text-gray-800 border-b pb-2 border-gray-200">PRIVACY</h3>
-              <div>
-                <label htmlFor="privacyMode" className="block text-gray-700 text-lg mb-2">Who can send me messages?</label>
-                <select
-                  id="privacyMode"
-                  name="privacyMode"
-                  value={appSettings.privacyMode}
-                  onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 text-gray-800"
-                >
-                  <option value="everyone">Everyone</option>
-                  <option value="friends_only">Friends Only</option>
-                  <option value="private">No One (Private Mode)</option>
-                </select>
-              </div>
-              <div className="flex items-center justify-between py-2 mt-4">
-                <label htmlFor="autoArchiveChats" className="text-gray-700 text-lg">Auto-archive old chats (30 days)</label>
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    id="autoArchiveChats"
-                    name="autoArchiveChats"
-                    checked={appSettings.autoArchiveChats}
-                    onChange={handleInputChange}
-                  />
-                  <span className="slider round"></span>
-                </label>
-              </div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Username
+              </label>
+              <input
+                type="text"
+                {...register("username")}
+                className="w-full px-4 py-3 rounded-lg bg-gray-100 border border-gray-300 focus:ring-blue-500 focus:outline-none"
+              />
             </div>
 
-            {/* General & Appearance Settings */}
+            {/* Status */}
             <div>
-              <h3 className="text-xl font-semibold mb-3 pt-4 text-gray-800 border-b pb-2 border-gray-200">GENERAL & APPEARANCE</h3>
-              <div>
-                <label htmlFor="theme" className="block text-gray-700 text-lg mb-2">Theme</label>
-                <select
-                  id="theme"
-                  name="theme"
-                  value={appSettings.theme}
-                  onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 text-gray-800"
-                >
-                  <option value="system_default">System Default</option>
-                  <option value="light">Light</option>
-                  <option value="dark">Dark</option>
-                </select>
-                <p className="text-gray-500 text-sm mt-1">Note: Theme selection is for demonstration purposes only and does not change the actual display.</p>
-              </div>
-              <div className="mt-4">
-                <label htmlFor="language" className="block text-gray-700 text-lg mb-2">Language</label>
-                <select
-                  id="language"
-                  name="language"
-                  value={appSettings.language}
-                  onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 text-gray-800"
-                >
-                  <option value="english">English</option>
-                  <option value="spanish">Spanish</option>
-                  <option value="french">French</option>
-                </select>
-              </div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Status
+              </label>
+              <input
+                type="text"
+                {...register("status")}
+                className="w-full px-4 py-3 rounded-lg bg-gray-100 border border-gray-300 focus:ring-blue-500 focus:outline-none"
+              />
             </div>
 
-            {/* Save Status Message */}
-            {saveStatus && (
-              <p className={`mt-6 text-center font-bold text-sm ${saveStatus.includes('SUCCESS') ? 'text-green-600' : 'text-blue-600'}`}>
-                {saveStatus}
-              </p>
-            )}
+            {/* Save / Cancel */}
+            <div className="flex gap-4 justify-end">
+              <button
+                type="button"
+                onClick={() => setEditMode(false)}
+                className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 transition"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+              >
+                Save
+              </button>
+            </div>
           </form>
-        </div>
+        )}
       </div>
-      <style>
-        {`
-        /* The switch - the box around the slider */
-        .switch {
-          position: relative;
-          display: inline-block;
-          width: 50px;
-          height: 28px;
-        }
-
-        /* Hide default HTML checkbox */
-        .switch input {
-          opacity: 0;
-          width: 0;
-          height: 0;
-        }
-
-        /* The slider */
-        .slider {
-          position: absolute;
-          cursor: pointer;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-color: #ccc;
-          -webkit-transition: .4s;
-          transition: .4s;
-        }
-
-        .slider:before {
-          position: absolute;
-          content: "";
-          height: 20px;
-          width: 20px;
-          left: 4px;
-          bottom: 4px;
-          background-color: white;
-          -webkit-transition: .4s;
-          transition: .4s;
-        }
-
-        input:checked + .slider {
-          background-color: #2196F3; /* Blue */
-        }
-
-        input:focus + .slider {
-          box-shadow: 0 0 1px #2196F3;
-        }
-
-        input:checked + .slider:before {
-          -webkit-transform: translateX(22px);
-          -ms-transform: translateX(22px);
-          transform: translateX(22px);
-        }
-
-        /* Rounded sliders */
-        .slider.round {
-          border-radius: 28px;
-        }
-
-        .slider.round:before {
-          border-radius: 50%;
-        }
-        `}
-      </style>
     </div>
-  );
+  )
 }
-
-export default Settings;
