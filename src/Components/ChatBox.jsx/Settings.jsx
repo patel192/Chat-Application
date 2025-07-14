@@ -1,11 +1,11 @@
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useState,useEffect } from 'react';
 export const Settings = () => {
   const userId = localStorage.getItem('userId');
-  const { register, handleSubmit, setValue, watch } = useForm();
+  const { register, handleSubmit, setValue } = useForm();
   const [isEditing, setIsEditing] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
   const [preview, setPreview] = useState('');
@@ -16,10 +16,11 @@ export const Settings = () => {
       try {
         const res = await axios.get(`/user/${userId}`);
         setUserProfile(res.data.data);
-        setValue('fullName', res.data.data.fullName || '');
-        setValue('bio', res.data.data.bio || '');
-        setValue('location', res.data.data.location || '');
-        setPreview(res.data.data.profilePic);
+        const data = res.data.data;
+        setValue('fullName', data.fullName || '');
+        setValue('bio', data.bio || '');
+        setValue('location', data.location || '');
+        setPreview(data.profilePic);
       } catch (err) {
         toast.error('Failed to load profile.');
       }
@@ -27,6 +28,7 @@ export const Settings = () => {
     fetchUser();
   }, [userId, setValue]);
 
+  // Cloudinary Upload
   const uploadToCloudinary = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
@@ -36,21 +38,19 @@ export const Settings = () => {
     return res.data.secure_url;
   };
 
+  // Save Edits
   const onSubmit = async (data) => {
     try {
       let imageUrl = preview;
-
       if (data.profilePic?.[0]) {
         imageUrl = await uploadToCloudinary(data.profilePic[0]);
       }
-
       const payload = {
         fullName: data.fullName,
         bio: data.bio,
         location: data.location,
         profilePic: imageUrl,
       };
-
       const res = await axios.put(`/user/${userId}`, payload);
       setUserProfile(res.data.data);
       setIsEditing(false);
@@ -60,14 +60,28 @@ export const Settings = () => {
     }
   };
 
+  // Status Toggle
+  const handleStatusToggle = async () => {
+    try {
+      const updatedStatus = !userProfile.isOnline;
+      const res = await axios.put(`/user/${userId}`, {
+        isOnline: updatedStatus,
+      });
+      setUserProfile((prev) => ({ ...prev, isOnline: updatedStatus }));
+      toast.success(`You are now ${updatedStatus ? 'Online' : 'Offline'}`);
+    } catch (err) {
+      toast.error('Failed to update status');
+    }
+  };
+
   if (!userProfile) return null;
   return (
    <div className="min-h-screen bg-gradient-to-br from-[#0B1D51] via-[#1f3b73] to-[#3e63d3] flex items-center justify-center px-4 py-12">
       <ToastContainer />
       <div className="bg-white shadow-2xl rounded-2xl w-full max-w-4xl md:flex overflow-hidden">
-        {/* Left: Avatar */}
+        {/* Avatar */}
         <div className="bg-blue-700 text-white p-8 md:w-1/3 flex flex-col items-center">
-          <div className="relative">
+          <div className="relative mt-20">
             <img
               src={preview}
               alt="avatar"
@@ -79,23 +93,28 @@ export const Settings = () => {
                 accept="image/*"
                 {...register('profilePic')}
                 onChange={(e) => setPreview(URL.createObjectURL(e.target.files[0]))}
-                className="mt-2 text-sm text-center"
+                className="mt-2 text-sm"
               />
             )}
           </div>
           <h2 className="text-2xl font-bold mt-4">{userProfile.fullName || 'No name set'}</h2>
           <p className="text-blue-200">@{userProfile.username}</p>
-          <span className={`mt-2 px-3 py-1 text-sm font-semibold rounded-full ${userProfile.isOnline ? 'bg-green-500' : 'bg-gray-400'}`}>
+          <button
+            onClick={handleStatusToggle}
+            className={`mt-3 px-4 py-1 rounded-full text-sm font-semibold shadow-md transition ${
+              userProfile.isOnline
+                ? 'bg-green-500 hover:bg-green-600 text-white'
+                : 'bg-gray-400 hover:bg-gray-500 text-white'
+            }`}
+          >
             {userProfile.isOnline ? 'Online' : 'Offline'}
-          </span>
+          </button>
         </div>
 
-        {/* Right: Profile info */}
+        {/* Details */}
         <div className="p-8 md:w-2/3 bg-white text-gray-800">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <h3 className="text-2xl font-bold border-b pb-2">User Details</h3>
-
-            {/* Email (read-only) */}
             <div>
               <label className="block text-sm font-semibold mb-1">Email</label>
               <input
@@ -106,7 +125,6 @@ export const Settings = () => {
               />
             </div>
 
-            {/* Full Name */}
             <div>
               <label className="block text-sm font-semibold mb-1">Full Name</label>
               <input
@@ -117,7 +135,6 @@ export const Settings = () => {
               />
             </div>
 
-            {/* Bio */}
             <div>
               <label className="block text-sm font-semibold mb-1">Bio</label>
               {isEditing ? (
@@ -131,7 +148,6 @@ export const Settings = () => {
               )}
             </div>
 
-            {/* Location */}
             <div>
               <label className="block text-sm font-semibold mb-1">Location</label>
               <input
@@ -142,7 +158,6 @@ export const Settings = () => {
               />
             </div>
 
-            {/* Actions */}
             <div className="flex gap-4 mt-6">
               {isEditing ? (
                 <>
