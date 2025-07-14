@@ -8,6 +8,7 @@ import { Login } from "./Components/Home/Login";
 import { Signup } from "./Components/Home/Signup";
 import { UserDashBoard } from "./Components/user/UserDashBoard";
 import { Settings } from "./Components/ChatBox.jsx/Settings";
+import { Profile } from "./Components/ChatBox.jsx/Profile";
 import axios from "axios";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Home />}></Route>
+        <Route path="/profile" element={<Profile />}></Route>
 
         <Route path="/login" element={<Login />}></Route>
         <Route path="/settings" element={<Settings />}></Route>

@@ -1,27 +1,27 @@
-import React from 'react'
-import axios from "axios";
+import axios from 'axios';
+import { useForm } from 'react-hook-form';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useState,useEffect } from 'react';
-import { useForm } from "react-hook-form";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 export const Settings = () => {
-  const userId = localStorage.getItem("userId");
-  const { register, handleSubmit, setValue } = useForm();
-  const [user, setUser] = useState(null);
-  const [editMode, setEditMode] = useState(false);
-  const [preview, setPreview] = useState("");
+  const userId = localStorage.getItem('userId');
+  const { register, handleSubmit, setValue, watch } = useForm();
+  const [isEditing, setIsEditing] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
+  const [preview, setPreview] = useState('');
 
+  // Fetch user data from API
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await axios.get(`/user/${userId}`);
-        const data = res.data.data;
-        setUser(data);
-        setPreview(data.profilePic);
-        setValue("username", data.username);
-        setValue("status", data.status);
+        setUserProfile(res.data.data);
+        setValue('fullName', res.data.data.fullName || '');
+        setValue('bio', res.data.data.bio || '');
+        setValue('location', res.data.data.location || '');
+        setPreview(res.data.data.profilePic);
       } catch (err) {
-        toast.error("Error loading settings");
+        toast.error('Failed to load profile.');
       }
     };
     fetchUser();
@@ -29,142 +29,149 @@ export const Settings = () => {
 
   const uploadToCloudinary = async (file) => {
     const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "My_Images");
-    formData.append("cloud_name", "dfaou6haj");
-
-    try {
-      const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/dfaou6haj/image/upload",
-        formData
-      );
-      return res.data.secure_url;
-    } catch (err) {
-      toast.error("Image upload failed");
-      return null;
-    }
+    formData.append('file', file);
+    formData.append('upload_preset', 'My_Images');
+    formData.append('cloud_name', 'dfaou6haj');
+    const res = await axios.post('https://api.cloudinary.com/v1_1/dfaou6haj/image/upload', formData);
+    return res.data.secure_url;
   };
 
   const onSubmit = async (data) => {
     try {
-      let imgURL = preview;
+      let imageUrl = preview;
 
-      if (data.profilePic && data.profilePic[0]) {
-        const uploaded = await uploadToCloudinary(data.profilePic[0]);
-        if (uploaded) {
-          imgURL = uploaded;
-        }
+      if (data.profilePic?.[0]) {
+        imageUrl = await uploadToCloudinary(data.profilePic[0]);
       }
 
-      const update = {
-        username: data.username,
-        status: data.status,
-        profilePic: imgURL,
+      const payload = {
+        fullName: data.fullName,
+        bio: data.bio,
+        location: data.location,
+        profilePic: imageUrl,
       };
 
-      const res = await axios.put(`/user/${userId}`, update);
-      if (res.status === 200) {
-        toast.success("Updated Successfully");
-        setUser(res.data.data);
-        localStorage.setItem("userName", res.data.data.username);
-        localStorage.setItem("userPic", res.data.data.profilePic);
-        setEditMode(false);
-      }
+      const res = await axios.put(`/user/${userId}`, payload);
+      setUserProfile(res.data.data);
+      setIsEditing(false);
+      toast.success('Profile updated!');
     } catch (err) {
-      toast.error("Update failed");
+      toast.error('Update failed!');
     }
   };
 
-  if (!user) return null;
+  if (!userProfile) return null;
   return (
-     <div className="min-h-screen bg-gradient-to-br from-[#0B1D51] via-[#1f3b73] to-[#3e63d3] flex flex-col items-center justify-center px-4 py-12">
+   <div className="min-h-screen bg-gradient-to-br from-[#0B1D51] via-[#1f3b73] to-[#3e63d3] flex items-center justify-center px-4 py-12">
       <ToastContainer />
-      <div className="bg-white shadow-xl rounded-2xl w-full max-w-xl p-8">
-        <h2 className="text-3xl font-bold text-blue-700 mb-6 text-center">
-          Account Settings
-        </h2>
-
-        {!editMode ? (
-          <>
-            <div className="flex flex-col items-center gap-4 mb-8">
-              <img
-                src={user.profilePic}
-                alt="profile"
-                className="w-24 h-24 rounded-full object-cover border-4 border-blue-600"
-              />
-              <h3 className="text-xl font-semibold">{user.username}</h3>
-              <p className="text-gray-500 text-sm">{user.email}</p>
-              <p className="text-gray-600 text-sm">💬 {user.status || "No status"}</p>
-              <button
-                onClick={() => setEditMode(true)}
-                className="mt-4 px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-              >
-                Edit Profile
-              </button>
-            </div>
-          </>
-        ) : (
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            {/* Profile Pic Upload */}
-            <div className="flex items-center gap-4">
-              <img
-                src={preview}
-                alt="preview"
-                className="w-16 h-16 rounded-full object-cover border"
-              />
+      <div className="bg-white shadow-2xl rounded-2xl w-full max-w-4xl md:flex overflow-hidden">
+        {/* Left: Avatar */}
+        <div className="bg-blue-700 text-white p-8 md:w-1/3 flex flex-col items-center">
+          <div className="relative">
+            <img
+              src={preview}
+              alt="avatar"
+              className="w-32 h-32 rounded-full object-cover border-4 border-white"
+            />
+            {isEditing && (
               <input
                 type="file"
                 accept="image/*"
-                {...register("profilePic")}
-                onChange={(e) =>
-                  setPreview(URL.createObjectURL(e.target.files[0]))
-                }
-                className="text-sm text-gray-500"
+                {...register('profilePic')}
+                onChange={(e) => setPreview(URL.createObjectURL(e.target.files[0]))}
+                className="mt-2 text-sm text-center"
+              />
+            )}
+          </div>
+          <h2 className="text-2xl font-bold mt-4">{userProfile.fullName || 'No name set'}</h2>
+          <p className="text-blue-200">@{userProfile.username}</p>
+          <span className={`mt-2 px-3 py-1 text-sm font-semibold rounded-full ${userProfile.isOnline ? 'bg-green-500' : 'bg-gray-400'}`}>
+            {userProfile.isOnline ? 'Online' : 'Offline'}
+          </span>
+        </div>
+
+        {/* Right: Profile info */}
+        <div className="p-8 md:w-2/3 bg-white text-gray-800">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <h3 className="text-2xl font-bold border-b pb-2">User Details</h3>
+
+            {/* Email (read-only) */}
+            <div>
+              <label className="block text-sm font-semibold mb-1">Email</label>
+              <input
+                type="email"
+                value={userProfile.email}
+                readOnly
+                className="w-full bg-gray-100 px-4 py-2 rounded border border-gray-300"
               />
             </div>
 
-            {/* Username */}
+            {/* Full Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Username
-              </label>
+              <label className="block text-sm font-semibold mb-1">Full Name</label>
               <input
                 type="text"
-                {...register("username")}
-                className="w-full px-4 py-3 rounded-lg bg-gray-100 border border-gray-300 focus:ring-blue-500 focus:outline-none"
+                {...register('fullName')}
+                disabled={!isEditing}
+                className="w-full px-4 py-2 rounded border border-gray-300 focus:outline-blue-500"
               />
             </div>
 
-            {/* Status */}
+            {/* Bio */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Status
-              </label>
+              <label className="block text-sm font-semibold mb-1">Bio</label>
+              {isEditing ? (
+                <textarea
+                  rows="3"
+                  {...register('bio')}
+                  className="w-full px-4 py-2 border border-gray-300 rounded"
+                />
+              ) : (
+                <p className="text-gray-700">{userProfile.bio || 'No bio added yet.'}</p>
+              )}
+            </div>
+
+            {/* Location */}
+            <div>
+              <label className="block text-sm font-semibold mb-1">Location</label>
               <input
                 type="text"
-                {...register("status")}
-                className="w-full px-4 py-3 rounded-lg bg-gray-100 border border-gray-300 focus:ring-blue-500 focus:outline-none"
+                {...register('location')}
+                disabled={!isEditing}
+                className="w-full px-4 py-2 rounded border border-gray-300 focus:outline-blue-500"
               />
             </div>
 
-            {/* Save / Cancel */}
-            <div className="flex gap-4 justify-end">
-              <button
-                type="button"
-                onClick={() => setEditMode(false)}
-                className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 transition"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
-              >
-                Save
-              </button>
+            {/* Actions */}
+            <div className="flex gap-4 mt-6">
+              {isEditing ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setIsEditing(false)}
+                    className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Save Changes
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(true)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                  Edit Profile
+                </button>
+              )}
             </div>
           </form>
-        )}
+        </div>
       </div>
     </div>
   )
