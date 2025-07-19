@@ -26,7 +26,7 @@ export const UserSidebar = () => {
       </h2>
       <nav className="flex flex-col gap-4 text-lg">
         <SidebarButton icon={<FaComments />} label="Chats" onClick={() => navigate("/dashboard/chats")} />
-        <SidebarButton icon={<FaUserFriends />} label="Contacts" onClick={() => navigate("/contacts")} />
+        <SidebarButton icon={<FaUserFriends />} label="Contacts" onClick={() => navigate("/dashboard/contacts")} />
         <SidebarButton icon={<FaUsers />} label="Groups" onClick={() => navigate("/groups")} />
         <SidebarButton icon={<FaBell />} label="Notifications" onClick={() => navigate("/notifications")} />
         <SidebarButton icon={<FaUser />} label="Profile" onClick={() => navigate("/profile")} />
