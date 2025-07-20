@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-export const Contacts = ({ userId }) => {
+export const Contacts = () => {
   const [users, setUsers] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [search, setSearch] = useState("");
-
+const userId = localStorage.getItem("userId")
   // Fetch all users
   const fetchUsers = async () => {
     try {
@@ -31,7 +31,7 @@ export const Contacts = ({ userId }) => {
   // Add a user as contact
   const handleAddContact = async (contactId) => {
     try {
-      const res = await axios.post(`http://localhost:3003/user/${userId}/add-contact`, {
+      const res = await axios.post(`http://localhost:3003/user/${contactId}/add-contact`, {
         userId,
         contactId,
       });
