@@ -28,7 +28,8 @@ export const Chats = () => {
           return (
             <Link>
               <div className="place-items-center mt-10 w-70 h-15 flex bg-blue-950 text-white rounded cursor-pointer">
-                <div className="ml-10 font-bold">{contact.username}</div>
+                <div><img className="ml-5 rounded-full h-11"  src={contact.profilePic} alt="" /></div>
+                <div className="ml-4 font-bold">{contact.username}</div>
               </div>
             </Link>
           );
