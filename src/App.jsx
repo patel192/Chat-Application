@@ -22,7 +22,7 @@ function App() {
         <Route path="/features" element={<Features />}></Route>
         <Route path="/dashboard" element={<UserDashBoard />}>
           <Route path="contacts" element={<Contacts />}></Route>
-          <Route path="chats" element={<Chats />}></Route>
+          <Route path="chats" element={<Chats currentUserId="" chatId=""/>}></Route>
         </Route>
       </Routes>
     </>

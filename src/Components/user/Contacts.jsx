@@ -5,7 +5,7 @@ export const Contacts = () => {
   const [users, setUsers] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [search, setSearch] = useState("");
-const userId = localStorage.getItem("userId")
+  const userId = localStorage.getItem("userId");
   // Fetch all users
   const fetchUsers = async () => {
     try {
@@ -21,7 +21,9 @@ const userId = localStorage.getItem("userId")
   // Fetch current user's contacts
   const fetchContacts = async () => {
     try {
-      const res = await axios.get(`http://localhost:3003/user/${userId}/contacts`);
+      const res = await axios.get(
+        `http://localhost:3003/user/${userId}/contacts`
+      );
       setContacts(res.data.data);
     } catch (err) {
       console.error("Error fetching contacts:", err);
@@ -31,28 +33,40 @@ const userId = localStorage.getItem("userId")
   // Add a user as contact
   const handleAddContact = async (contactId) => {
     try {
-      const res = await axios.post(`http://localhost:3003/user/${contactId}/add-contact`, {
-        userId,
-        contactId,
-      });
+      const res = await axios.post(
+        `http://localhost:3003/user/${contactId}/add-contact`,
+        {
+          userId,
+          contactId,
+        }
+      );
       console.log(res.data.message);
       fetchContacts(); // Refresh contacts
     } catch (err) {
-      console.error("Error adding contact:", err.response?.data?.message || err.message);
+      console.error(
+        "Error adding contact:",
+        err.response?.data?.message || err.message
+      );
     }
   };
 
   // Delete a contact
   const handleDeleteContact = async (contactId) => {
     try {
-      const res = await axios.put(`http://localhost:3003/user/${userId}/delete-contact`, {
-        userId,
-        contactId,
-      });
+      const res = await axios.put(
+        `http://localhost:3003/user/${userId}/delete-contact`,
+        {
+          userId,
+          contactId,
+        }
+      );
       console.log(res.data.message);
       fetchContacts(); // Refresh contacts
     } catch (err) {
-      console.error("Error deleting contact:", err.response?.data?.message || err.message);
+      console.error(
+        "Error deleting contact:",
+        err.response?.data?.message || err.message
+      );
     }
   };
 
